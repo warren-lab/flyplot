@@ -30,9 +30,16 @@ def circmean(alpha,axis=None ):
         mean_angle=mean_angle+2*np.pi
     return mean_angle
 def deg360to180(angle):
-    if angle <0:
-        angle %=360
-    elif angle > 180:
-        angle = 360 - angle
-    
+    # if angle <0:
+    #     angle %=360
+    # elif angle > 180:
+    #     angle = 360 - angle
+    angle%=360
+    if angle>180:
+        angle-=360
     return angle
+
+def deg360to180_arr(angles):
+
+    result = np.array([deg360to180(angle) for angle in angles])
+    return result
