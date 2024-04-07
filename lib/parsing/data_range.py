@@ -33,7 +33,7 @@ def find_startdata(start_led_type, start_led_num, data, data_dict):
                 count +=1
     return starting_key
 
-def find_enddata(end_led_type, end_led_num):
+def find_enddata(end_led_type, end_led_num,data, data_dict):
     """
     parameters:
         end_led_type: this is the type "dark","stat", or "loop". That is a description of the section where you are wanting to end you data access from
@@ -41,4 +41,4 @@ def find_enddata(end_led_type, end_led_num):
     
     This will return the end key to which point the data will be accessed until. 
     """
-    return find_startdata(end_led_type, end_led_num)
+    return find_startdata(end_led_type, end_led_num, data, data_dict)

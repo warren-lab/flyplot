@@ -1,4 +1,7 @@
 #POLAR PLOTTING:
+import numpy as np
+
+
 def calc_mean_and_vector_strength(position_dt):
     vec_strength = 1-circvar(position_dt)
     mean_drxn=circmean(position_dt)  

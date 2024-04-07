@@ -12,6 +12,8 @@ as well as an additional 30s dark period for both male and female
 This is the `BASIC` Method as it is not as robust as the `EXACT` method in the other module in this directory
 """
 
+import numpy as np
+
 def find_index(idx,data,disp = 30, findstart= False):
     """
     parameters:
