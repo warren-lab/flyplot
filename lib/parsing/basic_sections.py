@@ -74,7 +74,7 @@ def get_led_position(idx, data):
     data related to the fly dataframe  
     """
     
-    return data['led position'].loc[idx]
+    return data['led position'].loc[idx], data['led angle'].loc[idx]
 
 def get_start_end_from_led(data):
     """
