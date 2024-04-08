@@ -122,7 +122,7 @@ def sub_exp_group(data):
                 curr_exp =''
             
             elif (sub_exp[1] is None) and (curr_exp == 'stat') and (data['led position'][pnt] != data['led position'][pnt-1]):
-                sub_exp[1]= pnt
+                sub_exp[1]= pnt+1
                 count_static_led+=1
                 fem_dict_sec["stat"+str(count_static_led)] = [sub_exp[0],sub_exp[1]]
                 print(data['led position'][sub_exp[0]],data['led position'][sub_exp[1]-1], fem_dict_sec["stat"+str(count_static_led)])
