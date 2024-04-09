@@ -34,10 +34,13 @@ def deg360to180(angle):
     #     angle %=360
     # elif angle > 180:
     #     angle = 360 - angle
-    angle%=360
-    if angle>180:
-        angle-=360
-    return angle
+    if angle in range(-180,181):
+        return angle
+    else:
+        angle%=360
+        if angle>180:
+            angle-=360
+        return angle
 
 def deg360to180_arr(angles):
 
