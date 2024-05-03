@@ -82,6 +82,159 @@ def get_contour_centroid(img):
     body_axis_pt_1 = int(Cx- axis_length*body_vect[0]), int(Cy - axis_length*body_vect[1])
     print(body_axis_pt_0)
     return fly_mask, max_contour,centroid, body_axis_pt_0,body_axis_pt_1
+def get_contour_centroid_adj(img):
+    """
+    This function takes an input of an image and 
+
+    rotates this image 
+    
+    returns the contour, centroid and centerline
+
+    """
+    img_dict = {
+        'img':None,
+        'centroid': None,
+        'body_axis_pt_0':None,
+        'body_axis_pt_1':None
+    }
+    # read in the image file of the fly as Grayscale
+    img_fly = cv2.imread(img,cv2.IMREAD_GRAYSCALE)
+    # Get basic image data
+    height, width = img_fly.shape
+    print("height",height)
+    image_cvsize = width, height 
+    mid_x, mid_y = 0.5*width, 0.5*height
+    # perform otsu thresholding
+    otsu_th, img_otsu = cv2.threshold(img_fly,25,np.iinfo(img_fly.dtype).max,cv2.THRESH_BINARY_INV)
+
+
+    # (Optional) -> Morphology: erosion
+    strel = np.ones((5,5),np.uint8)  
+
+    # maskFly = cv2.dilate(img_otsu, strel)
+    # perform an erosing
+    fly_mask = cv2.morphologyEx( cv2.morphologyEx(img_otsu, cv2.MORPH_CLOSE, strel), cv2.MORPH_OPEN, strel)
+
+
+    # get the contours
+    contours,hierarchy = cv2.findContours(fly_mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
+    # utilize find_fly_angle function to get max area and contour
+    max_contour, max_area = get_max_area_contour(contours)
+    # determine the centroid using find_fly_angle function
+    Cx, Cy = get_centroid(cv2.moments(max_contour))# centroid x,y coordinates
+    ## centroid
+    centroid = (int(Cx), int(Cy))
+    # determine the angle and body vectory using finde_fly_angle function
+    angle, body_vect = get_angle_and_body_vector(cv2.moments(max_contour))
+    # Get bounding box and find diagonal - used for drawing body axis
+    bbox = cv2.boundingRect(max_contour)
+    bbox_diag = np.sqrt(bbox[2]**2 + bbox[3]**2)
+    # Create points for drawing axis fly in contours image 
+    axis_length = 0.75*bbox_diag
+    body_axis_pt_0 = int(Cx+ axis_length*body_vect[0]), int(Cy+ axis_length*body_vect[1])
+    body_axis_pt_1 = int(Cx- axis_length*body_vect[0]), int(Cy - axis_length*body_vect[1])
+
+    # Compute cirlce mask
+    mask_radius = int(.95*height/2.0)
+    print('mask radius',mask_radius)
+    vals_x = np.arange(0.0,width)
+    vals_y = np.arange(0.0,height)
+    grid_x, grid_y = np.meshgrid(vals_x, vals_y)    ## plot the centroid
+    # plt.plot(centroid[0],centroid[1],marker = '.',color = 'r' ,markersize= 10)
+
+    ## plot arrow of direction
+    endpoint_x = centroid[0] + axis_length*body_vect[0]
+    endpoint_y = centroid[1] - axis_length*body_vect[1]
+    # plt.arrow(body_axis_pt_0[0],body_axis_pt_0[1],body_axis_pt_1[0],body_axis_pt_1[1],
+    #             width=1,  # Width of the arrow
+    #             head_width=30,  # Width of the arrow head
+    #             head_length=35,  # Length of the arrow head
+    #             fc='blue',  # Fill color of the arrow
+    #             ec='blue',  # Edge color of the arrow
+    #             linestyle='-',  # Style of the arrow
+    #             length_includes_head=True
+
+    #             )
+    # cv2.line(img_fly, body_axis_pt_0, body_axis_pt_1, (0,0,255), 2)
+
+    # ##  plot the image
+    # plt.imshow(img_fly,cmap ='gray')
+    
+    circ_mask = (grid_x - width/2.0 + 0.5)**2 + (grid_y - height/2.0 + 0.5)**2 < (mask_radius)**2
+
+
+
+    # Get matrices for shifting (centering) and rotating the image
+    shift_mat = np.matrix([[1.0, 0.0, (mid_x - Cx)], [0.0, 1.0, (mid_y - Cy)]]) 
+    rot_mat = cv2.getRotationMatrix2D((mid_x, mid_y),np.rad2deg(angle),1.0)
+
+    # Shift and rotate the original image
+    shifted_image = cv2.warpAffine(img_fly, shift_mat, image_cvsize)
+    rotated_image = cv2.warpAffine(shifted_image,rot_mat,image_cvsize)
+    rotated_image = cv2.rotate(rotated_image, cv2.ROTATE_90_CLOCKWISE)
+    # Shift and rotate threshold image. 
+    shifted_threshold_image = cv2.warpAffine(fly_mask, shift_mat, image_cvsize)
+    rotated_threshold_image = cv2.warpAffine(shifted_threshold_image,rot_mat,image_cvsize)
+    rotated_threshold_image = rotated_threshold_image*circ_mask
+    # Get orientation discriminant and flip image if needed 
+    orient_ok, orient_discrim = is_orientation_ok(rotated_threshold_image,2)
+    if not orient_ok:
+        rot_180_mat = cv2.getRotationMatrix2D((mid_x, mid_y),-180.0,1.0)
+        rotated_image = cv2.warpAffine(rotated_image,rot_180_mat,image_cvsize)
+        rotated_threhold_image = cv2.warpAffine(rotated_threshold_image,rot_180_mat,image_cvsize)
+        angle += np.deg2rad(-180.0)
+
+    # Get basic image data
+    height, width = rotated_image.shape
+    print("height",height)
+    image_cvsize = width, height 
+    mid_x, mid_y = 0.5*width, 0.5*height
+    # perform otsu thresholding
+    otsu_th, img_otsu = cv2.threshold(rotated_image,25,np.iinfo(img_fly.dtype).max,cv2.THRESH_BINARY_INV)
+
+
+    # (Optional) -> Morphology: erosion
+    strel = np.ones((5,5),np.uint8)  
+
+    # maskFly = cv2.dilate(img_otsu, strel)
+    # perform an erosing
+    fly_mask = cv2.morphologyEx( cv2.morphologyEx(img_otsu, cv2.MORPH_CLOSE, strel), cv2.MORPH_OPEN, strel)
+
+
+    # get the contours
+    contours,hierarchy = cv2.findContours(fly_mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
+    # utilize find_fly_angle function to get max area and contour
+    max_contour, max_area = get_max_area_contour(contours)
+    # determine the centroid using find_fly_angle function
+    Cx, Cy = get_centroid(cv2.moments(max_contour))# centroid x,y coordinates
+    ## centroid
+    centroid = (int(Cx), int(Cy))
+    # determine the angle and body vectory using finde_fly_angle function
+    angle, body_vect = get_angle_and_body_vector(cv2.moments(max_contour))
+    # Get bounding box and find diagonal - used for drawing body axis
+    bbox = cv2.boundingRect(max_contour)
+    bbox_diag = np.sqrt(bbox[2]**2 + bbox[3]**2)
+    # Create points for drawing axis fly in contours image 
+    axis_length = 0.75*bbox_diag
+    body_axis_pt_0 = int(Cx+ axis_length*body_vect[0]), int(Cy+ axis_length*body_vect[1])
+    body_axis_pt_1 = int(Cx- axis_length*body_vect[0]), int(Cy - axis_length*body_vect[1])
+
+    # On the rotated image
+
+    # # Shift and rotate threshold image. 
+    # shifted_threshold_image = cv2.warpAffine(fly_mask, shift_mat, image_cvsize)
+    # rotated_threshold_image = cv2.warpAffine(shifted_threshold_image,rot_mat,image_cvsize)
+    # rotated_threshold_image = rotated_threshold_image*circ_mask
+    # rval, rotated_threshold_image  = cv2.threshold(rotated_threshold_image,0,256,cv2.THRESH_OTSU +cv2.THRESH_BINARY_INV)
+    # # Get orientation discriminant and flip image if needed 
+    # orient_ok, orient_discrim = is_orientation_ok(rotated_threshold_image,2)
+    # if not orient_ok:
+    #     rot_180_mat = cv2.getRotationMatrix2D((mid_x, mid_y),-180.0,1.0)
+    #     rotated_image = cv2.warpAffine(rotated_image,rot_180_mat,image_cvsize)
+    #     rotated_threhold_image = cv2.warpAffine(rotated_threshold_image,rot_180_mat,image_cvsize)
+    #     angle += np.deg2rad(-180.0)
+    
+    return fly_mask, max_contour,centroid, body_axis_pt_0,body_axis_pt_1
 
 
     # # Compute cirlce mask
@@ -315,7 +468,7 @@ def single_image_save(file_name,display=False):
         plt.figure(figsize=(24,24))
         ## will create 4 image panels
         ### 1 the original image
-        plt.subplot(1,2,1)
+        plt.subplot(2,2,1)
         plt.title("Original Image", fontsize=10)
         plt.imshow(img_fly,cmap = 'gray')
         # ### 2 optional show the image mask
@@ -324,7 +477,7 @@ def single_image_save(file_name,display=False):
         # masked_filled_fly = get_fill_flymask(fly_mask, max_contour)
         # plt.imshow(masked_filled_fly,cmap ='gray')
         ### 3 original image with the contour and line    ## plot the centroid
-        plt.subplot(1,2,2)
+        plt.subplot(2,2,2)
         plt.title("Fly Contour and Orientation")
         
         plt.plot(centroid[0],centroid[1],marker = '.',color = 'r' ,markersize= 10)
@@ -346,10 +499,18 @@ def single_image_save(file_name,display=False):
         # cv2.line(img_fly, body_axis_pt_0, body_axis_pt_1, (0,0,255), 2)
         plt.plot((body_axis_pt_0[0],body_axis_pt_1[0]),(body_axis_pt_0[1],body_axis_pt_1[1]), color = 'r')
         cv2.circle(img_fly, (int(centroid[0] + np.cos(angle)*mask_radius),int(centroid[1] + np.sin(angle)*mask_radius)), 10, (0,255,255), -1)
-
         ##  plot the image
         plt.imshow(img_fly,cmap ='gray')
-        plt.savefig('images!')
+
+        plt.subplot(2,2,3)
+        plt.imshow(rotated_threshold_image, cmap ='gray')
+
+
+        # Rotated Threshold need to rotate 90 again...
+        image = cv2.rotate(rotated_image, cv2.ROTATE_90_CLOCKWISE)
+        plt.imshow(image, cmap ='gray')
+
+        # plt.savefig('images!')
 
     # save this figure
     # plt.figure(figsize=(15,15))
