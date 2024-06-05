@@ -49,6 +49,20 @@ def dark_led_positions(data):
 #### check if i == i+1 if it does check when there is change from that value of i to different value...
 #### if ths is not true and all values are different then will determine when there is a change to a constant value....
 def sub_exp_group(data):
+    """
+    creates dictionary that holds the ranges of time in seconds
+    for the different periods which occur within the experiment
+
+    Ex:
+    {
+    'cali':[0,9],
+    'dark1':[9,946],
+    'loop1':[946,1075],
+    'loop2':[1074,1202]
+    }
+
+    Where the first 10 seconds is calibration followed by a dark period, and then some experimental looping periods.
+    """
     # get from end of dark period/start of first sub experiment to the start of the the last dark period...
     ## empty list for groups... will add start and end sub indexes as sub lists...
     fem_dict_sec = {}
