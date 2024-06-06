@@ -106,7 +106,7 @@ def contour_rot_matrix(img):
 
     After this point the rotational matrix is performed in order to determine what the original non rotated position would be with respect to the centroid
     """
-     # read in the image file of the fly as Grayscale
+    # read in the image file of the fly as Grayscale
     img_fly = cv2.imread(img,cv2.IMREAD_GRAYSCALE)
     # Get basic image data
     height, width = img_fly.shape
@@ -338,6 +338,115 @@ def contour_rot_matrix_shift(img):
     centroid = (int(mid_x), int(mid_y))
     # print(body_axis_pt_0[0],body_axis_pt_0[1])
     return fly_mask, max_contour,centroid, body_axis_pt_0,body_axis_pt_1,unrot_vec
+def contour_hrz_matrix(img):
+    # read in the image file of the fly as Grayscale
+    img_fly = cv2.imread(img,cv2.IMREAD_GRAYSCALE)
+    # Get basic image data
+    height, width = img_fly.shape
+    print("height",height)
+    image_cvsize = width, height 
+    mid_x, mid_y = 0.5*width, 0.5*height
+    # perform thresholding
+    otsu_th, img_th = cv2.threshold(img_fly,25,np.iinfo(img_fly.dtype).max,cv2.THRESH_BINARY_INV)
+    # (Optional) -> Morphology: erosion
+    strel = np.ones((5,5),np.uint8)  
+    # maskFly = cv2.dilate(img_otsu, strel)
+    # perform an morphological operation to smooth the image and then get the mask
+    fly_mask = cv2.morphologyEx( cv2.morphologyEx(img_th, cv2.MORPH_CLOSE, strel), cv2.MORPH_OPEN, strel)
+
+    # get the contours
+    contours,hierarchy = cv2.findContours(fly_mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
+    # utilize find_fly_angle function to get max area and contour
+    max_contour, max_area = get_max_area_contour(contours)
+    # determine the centroid using find_fly_angle function
+    Cx, Cy = get_centroid(cv2.moments(max_contour))# centroid x,y coordinates
+    ## centroid
+    centroid = (int(Cx), int(Cy))
+    # determine the angle and body vectory using finde_fly_angle function
+    angle, body_vect = get_angle_and_body_vector(cv2.moments(max_contour))
+    # Get bounding box and find diagonal - used for drawing body axis
+    bbox = cv2.boundingRect(max_contour)
+    bbox_diag = np.sqrt(bbox[2]**2 + bbox[3]**2)
+    # Create points for drawing axis fly in contours image 
+    axis_length = 0.75*bbox_diag
+    body_axis_pt_0 = int(Cx+ axis_length*body_vect[0]), int(Cy+ axis_length*body_vect[1])
+    body_axis_pt_1 = int(Cx- axis_length*body_vect[0]), int(Cy - axis_length*body_vect[1])
+
+    # Compute circle mask
+    mask_radius = int(.95*height/2.0)
+    print('mask radius',mask_radius)
+    vals_x = np.arange(0.0,width)
+    vals_y = np.arange(0.0,height)
+    grid_x, grid_y = np.meshgrid(vals_x, vals_y)    ## plot the centroid
+    # Circular Mask
+    circ_mask = (grid_x - width/2.0 + 0.5)**2 + (grid_y - height/2.0 + 0.5)**2 < (mask_radius)**2
+
+    # ROTATION
+    # Get matrices for shifting (centering) and rotating the image
+    shift_mat = np.matrix([[1.0, 0.0, (mid_x - Cx)], [0.0, 1.0, (mid_y - Cy)]]) 
+    rot_mat = cv2.getRotationMatrix2D((mid_x, mid_y),np.rad2deg(angle),1.0)
+
+    # Shift and rotate the original image
+    shifted_image = cv2.warpAffine(img_fly, shift_mat, image_cvsize)
+    rotated_image = cv2.warpAffine(shifted_image,rot_mat,image_cvsize)
+    rotated_image = cv2.rotate(rotated_image, cv2.ROTATE_90_CLOCKWISE)
+    # Shift and rotate threshold image. 
+    shifted_threshold_image = cv2.warpAffine(fly_mask, shift_mat, image_cvsize)
+    rotated_threshold_image = cv2.warpAffine(shifted_threshold_image,rot_mat,image_cvsize)
+    rotated_threshold_image = cv2.rotate(rotated_threshold_image, cv2.ROTATE_90_CLOCKWISE)
+    rotated_threshold_image = rotated_threshold_image*circ_mask
+    
+    # get the contours
+    contours,hierarchy = cv2.findContours(rotated_threshold_image,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
+    # utilize find_fly_angle function to get max area and contour
+    max_contour, max_area = get_max_area_contour(contours)
+    # determine the centroid using find_fly_angle function
+    Cx, Cy = get_centroid(cv2.moments(max_contour))# centroid x,y coordinates
+    ## centroid
+    centroid = (int(Cx), int(Cy))
+    # determine the angle and body vectory using finde_fly_angle function
+    angle, body_vect = get_angle_and_body_vector(cv2.moments(max_contour))
+    # Get bounding box and find diagonal - used for drawing body axis
+    bbox = cv2.boundingRect(max_contour)
+    bbox_diag = np.sqrt(bbox[2]**2 + bbox[3]**2)
+    # Create points for drawing axis fly in contours image 
+    axis_length = 0.75*bbox_diag
+    body_axis_pt_0 = int(Cx+ axis_length*body_vect[0]), int(Cy+ axis_length*body_vect[1])
+    body_axis_pt_1 = int(Cx- axis_length*body_vect[0]), int(Cy - axis_length*body_vect[1])
+
+
+#     # Rotation Adjusted Body Axis
+#     print(body_axis_pt_0,"old body axis")
+#     # body_axis_pt_0 = np.array(body_axis_pt_0)
+#     body_axis_pt_0-= np.array([[Cx,Cy]]).astype(int)
+#     print(rotation_mat.shape, np.array(body_axis_pt_0).shape,body_axis_pt_0.reshape(2,1) )
+#     body_axis_pt_0 = np.dot(rotation_mat, np.array(body_axis_pt_0).reshape(2,1))
+#     body_axis_pt_0+= np.array([[Cx,Cy]]).astype(int).reshape(2,1)
+#     body_axis_pt_0 = body_axis_pt_0.astype(int)
+#     print(body_axis_pt_0,"new body axis 0")
+#     print(body_axis_pt_1,"old body axis 1")
+#     # body_axis_pt_1 = np.array(body_axis_pt_1)
+#     body_axis_pt_1-= np.array([[Cx,Cy]]).astype(int)
+#     print(rotation_mat.shape, np.array(body_axis_pt_1).shape,body_axis_pt_1.reshape(2,1) )
+#     body_axis_pt_1 = np.dot(rotation_mat, np.array(body_axis_pt_1).reshape(2,1))
+#     body_axis_pt_1+= np.array([[Cx,Cy]]).astype(int).reshape(2,1)
+#     body_axis_pt_1 = body_axis_pt_1.astype(int)
+#     print(body_axis_pt_1,"new body axis 1")
+#     print("ANGLE:",angle,np.rad2deg(angle))
+#     # determine the angle and body vectory using finde_fly_angle function
+#     angle, body_vect = get_angle_and_body_vector(cv2.moments(unrot_vec))
+#     # Get bounding box and find diagonal - used for drawing body axis
+#     bbox = cv2.boundingRect(max_contour)
+#     bbox_diag = np.sqrt(bbox[2]**2 + bbox[3]**2)
+#     # Create points for drawing axis fly in contours image 
+#     axis_length = 0.75*bbox_diag
+#     body_axis_pt_0 = int(Cx+ axis_length*body_vect[0]), int(Cy+ axis_length*body_vect[1])
+#     body_axis_pt_1 = int(Cx- axis_length*body_vect[0]), int(Cy - axis_length*body_vect[1])
+
+
+
+    return rotated_threshold_image, max_contour,centroid, body_axis_pt_0,body_axis_pt_1
+    
 
 ################# RESTART NEW METHOD.... ROTATE THE IMAGE THEN GET THE INFORMATION   ##############
 def get_contour_rotated(img):
