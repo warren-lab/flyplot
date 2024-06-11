@@ -352,8 +352,8 @@ def contour_hrz_matrix(img):
     strel = np.ones((5,5),np.uint8)  
     # maskFly = cv2.dilate(img_otsu, strel)
     # perform an morphological operation to smooth the image and then get the mask
-    fly_mask = cv2.morphologyEx( cv2.morphologyEx(img_th, cv2.MORPH_CLOSE, strel), cv2.MORPH_OPEN, strel)
-
+    # fly_mask = cv2.morphologyEx( cv2.morphologyEx(img_th, cv2.MORPH_CLOSE, strel), cv2.MORPH_OPEN, strel)
+    fly_mask = img_th
     # get the contours
     contours,hierarchy = cv2.findContours(fly_mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
     # utilize find_fly_angle function to get max area and contour
