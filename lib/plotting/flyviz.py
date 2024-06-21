@@ -363,7 +363,7 @@ def contour_hrz_matrix(img):
     ## centroid
     centroid = (int(Cx), int(Cy))
     # determine the angle and body vectory using finde_fly_angle function
-    angle, body_vect = get_angle_and_body_vector(cv2.moments(max_contour))
+    angle_OG, body_vect = get_angle_and_body_vector(cv2.moments(max_contour))
     # Get bounding box and find diagonal - used for drawing body axis
     bbox = cv2.boundingRect(max_contour)
     bbox_diag = np.sqrt(bbox[2]**2 + bbox[3]**2)
@@ -384,7 +384,7 @@ def contour_hrz_matrix(img):
     # ROTATION
     # Get matrices for shifting (centering) and rotating the image
     shift_mat = np.matrix([[1.0, 0.0, (mid_x - Cx)], [0.0, 1.0, (mid_y - Cy)]]) 
-    rot_mat = cv2.getRotationMatrix2D((mid_x, mid_y),np.rad2deg(angle),1.0)
+    rot_mat = cv2.getRotationMatrix2D((mid_x, mid_y),np.rad2deg(angle_OG),1.0)
 
     # Shift and rotate the original image
     shifted_image = cv2.warpAffine(img_fly, shift_mat, image_cvsize)
@@ -405,7 +405,7 @@ def contour_hrz_matrix(img):
     ## centroid
     centroid = (int(Cx), int(Cy))
     # determine the angle and body vectory using finde_fly_angle function
-    angle, body_vect = get_angle_and_body_vector(cv2.moments(max_contour))
+    angle_rot, body_vect = get_angle_and_body_vector(cv2.moments(max_contour))
     # Get bounding box and find diagonal - used for drawing body axis
     bbox = cv2.boundingRect(max_contour)
     bbox_diag = np.sqrt(bbox[2]**2 + bbox[3]**2)
@@ -442,10 +442,10 @@ def contour_hrz_matrix(img):
 #     axis_length = 0.75*bbox_diag
 #     body_axis_pt_0 = int(Cx+ axis_length*body_vect[0]), int(Cy+ axis_length*body_vect[1])
 #     body_axis_pt_1 = int(Cx- axis_length*body_vect[0]), int(Cy - axis_length*body_vect[1])
+    angle_OG = normalize_angle_range(angle_OG)
 
 
-
-    return rotated_threshold_image, max_contour,centroid, body_axis_pt_0,body_axis_pt_1
+    return fly_mask, rotated_threshold_image, max_contour,centroid, body_axis_pt_0,body_axis_pt_1, angle_OG, angle_rot
     
 
 ################# RESTART NEW METHOD.... ROTATE THE IMAGE THEN GET THE INFORMATION   ##############
