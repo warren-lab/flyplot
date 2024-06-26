@@ -343,7 +343,7 @@ def contour_hrz_matrix(img):
     img_fly = cv2.imread(img,cv2.IMREAD_GRAYSCALE)
     # Get basic image data
     height, width = img_fly.shape
-    print("height",height)
+    # print("height",height)
     image_cvsize = width, height 
     mid_x, mid_y = 0.5*width, 0.5*height
     # perform thresholding
@@ -374,7 +374,7 @@ def contour_hrz_matrix(img):
 
     # Compute circle mask
     mask_radius = int(.95*height/2.0)
-    print('mask radius',mask_radius)
+    # print('mask radius',mask_radius)
     vals_x = np.arange(0.0,width)
     vals_y = np.arange(0.0,height)
     grid_x, grid_y = np.meshgrid(vals_x, vals_y)    ## plot the centroid
@@ -446,7 +446,7 @@ def contour_hrz_matrix(img):
 
 
     return fly_mask, rotated_threshold_image, max_contour,centroid, body_axis_pt_0,body_axis_pt_1, angle_OG, angle_rot
-    
+
 
 ################# RESTART NEW METHOD.... ROTATE THE IMAGE THEN GET THE INFORMATION   ##############
 def get_contour_rotated(img):
