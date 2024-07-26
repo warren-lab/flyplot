@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "flyplot"
+version = "0.1.0"
+description = "Python package that aids in the generation of informative plots and informatics regarding drosophila based experiments."
+authors = ["Logan Rower <lkrower2000@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.9, <3.13"
+numpy = "1.26.0"
+matplotlib = "3.7.5"
+opencv-python = "4.9.0.80"
+pandas = "2.0.3"
+find_fly_angle={git = "https://github.com/warren-lab/find_fly_angle.git",branch="main"}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

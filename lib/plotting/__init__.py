@@ -1,1 +1,0 @@
-print("Initialized Plotting Package")

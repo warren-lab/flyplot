@@ -12,6 +12,10 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+dist/
 
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
+
+# Poetry
+.lock
