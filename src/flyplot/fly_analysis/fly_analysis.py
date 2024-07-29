@@ -70,12 +70,12 @@ def flyplot_copy():
     print("EXP Date",date_exp)
     # Copy Notebook
     print("Copied Notebook Location")
-    target_dir = os.path.join(path_dir,'flyflip_{date_exp}.ipynb')
+    target_dir = os.path.join(path_dir,f'flyflip_{date_exp}.ipynb')
     print("Does notebook exists?",os.path.exists('flyflip.ipynb'))
     print("Does target path exists?",os.path.exists(path_dir))
     with pkg_resources.open_binary('flyplot.fly_analysis', 'flyflip.ipynb') as nb_file:
         with open(target_dir,'wb') as target:
-            notebook_loc = shutil.copyfile(nb_file,target)
+            notebook_loc = shutil.copyfileobj(nb_file,target)
             print(notebook_loc,"\n")
     print(os.path.exists(target_dir))
 
@@ -89,10 +89,11 @@ def flyplot_copy():
         img_source = fly_book_content['cells'][6]['source'][0].split("=")
         print(img_source)
         img_source_new = img_source[0] + " = " + str(imgs_dir) 
-        print(img_source_new)
+        print('NEW IMAGE SOURCE->',img_source_new)
         txt_source = fly_book_content['cells'][7]['source'][0].split("=")
         print(txt_source)
         txt_source_new = txt_source[0] + " = " + str(txtfile) 
+        print('NEW TXT SOURCE',txt_source_new)
         fly_book_content['cells'][7]['source'][0] = txt_source_new
 
     # Write paths
@@ -106,5 +107,5 @@ def flyplot_copy():
         print(source_img)
         source_txt = fly_book_content['cells'][7]['source'][0].split("=")
         print(source_txt)
-if __name__ == "__main__":
-     flyplot_setup()
+# if __name__ == "__main__":
+#      flyplot_setup()
