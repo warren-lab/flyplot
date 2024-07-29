@@ -8,6 +8,9 @@ readme = "README.md"
 packages = [
     { include = "flyplot", from = "src" }
 ]
+include = [
+    "src/flyplot/fly_analysis/flyflip.ipynb"
+]
 
 
 [tool.poetry.dependencies]
@@ -21,6 +24,3 @@ find_fly_angle={git = "https://github.com/warren-lab/find_fly_angle.git",branch=
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.include]
-"src/flyplot/fly_analysis/flyflip.ipynb" = ["flyflip.ipynb"]
