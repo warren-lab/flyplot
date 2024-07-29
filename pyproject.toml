@@ -5,6 +5,10 @@ description = "Python package that aids in the generation of informative plots a
 authors = ["Logan Rower <lkrower2000@gmail.com>"]
 license = "MIT"
 readme = "README.md"
+packages = [
+    { include = "flyplot", from = "src" }
+]
+
 
 [tool.poetry.dependencies]
 python = ">=3.9, <3.13"
@@ -17,3 +21,6 @@ find_fly_angle={git = "https://github.com/warren-lab/find_fly_angle.git",branch=
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.include]
+"src/flyplot/fly_analysis/flyflip.ipynb" = "flyflip.ipynb"

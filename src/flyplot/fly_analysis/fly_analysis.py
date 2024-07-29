@@ -20,6 +20,7 @@ import shutil
 import json
 import sys
 import configparser
+import importlib.resources as pkg_resources
 
 def flyplot_setup():
     """
@@ -69,11 +70,14 @@ def flyplot_copy():
     print("EXP Date",date_exp)
     # Copy Notebook
     print("Copied Notebook Location")
-    target_dir = f'{path_dir}/flyflip_{date_exp}.ipynb'
+    target_dir = os.path.join(path_dir,'flyflip_{date_exp}.ipynb')
     print("Does notebook exists?",os.path.exists('flyflip.ipynb'))
     print("Does target path exists?",os.path.exists(path_dir))
-    notebook_loc = shutil.copyfile('flyflip.ipynb',target_dir)
-    print(notebook_loc,"\n")
+    with pkg_resources.open_binary('flyplot.analysis', 'flyflip.ipynb') as nb_file:
+        with open(target_dir,'wb') as target:
+            notebook_loc = shutil.copyfile(nb_file,target)
+            print(notebook_loc,"\n")
+    print(os.path.exists(target_dir))
 
     img_source_new = ""
     txt_source_new =""
