@@ -10,6 +10,10 @@ packages = [
 ]
 include = [
     "src/flyplot/fly_analysis/flyflip.ipynb"
+    "src/flyplot/data/figs/*"
+    "src/flyplot/data/imgs/*"
+    "src/flyplot/data/raw_data/*.csv"
+    "src/flyplot/data/raw_data/*.csv"
 ]
 
 
