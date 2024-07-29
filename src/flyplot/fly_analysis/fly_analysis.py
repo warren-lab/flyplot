@@ -73,7 +73,7 @@ def flyplot_copy():
     target_dir = os.path.join(path_dir,'flyflip_{date_exp}.ipynb')
     print("Does notebook exists?",os.path.exists('flyflip.ipynb'))
     print("Does target path exists?",os.path.exists(path_dir))
-    with pkg_resources.open_binary('flyplot.analysis', 'flyflip.ipynb') as nb_file:
+    with pkg_resources.open_binary('flyplot.fly_analysis', 'flyflip.ipynb') as nb_file:
         with open(target_dir,'wb') as target:
             notebook_loc = shutil.copyfile(nb_file,target)
             print(notebook_loc,"\n")

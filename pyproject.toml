@@ -23,4 +23,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.include]
-"src/flyplot/fly_analysis/flyflip.ipynb" = "flyflip.ipynb"
+"src/flyplot/fly_analysis/flyflip.ipynb" = ["flyflip.ipynb"]
