@@ -6,6 +6,13 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 import numpy as np
 
+def wrapping_fix_single(data):
+    """
+    Parameters:
+        - data:
+            Corresponds to a dataframe containing heading related data
+    NEED TO CHANGE Adjusted HEADING TO fly heading
+    """
 def wrapping_fix(df_orig,df_revised):
     """
     Parameters:
@@ -41,8 +48,6 @@ def wrapping_fix(df_orig,df_revised):
         # ynew = f(xnew)   # use interpolation function returned by `interp1d`\n",
     else:
         # f = interpolate.interp1d(df_fem_loop['delta-t'],df_fem_loop['fly heading'], kind='cubic')
-
-
         sub_idx_groups = [[0,len(df_revised['Adjusted Angle'])]]
 
     for k_sub in range(len(sub_idx_groups)):
@@ -51,8 +56,6 @@ def wrapping_fix(df_orig,df_revised):
         # Original Plot
         ax1.plot(df_orig['delta-t'][start_k:end_k],df_orig['fly heading'][start_k:end_k],color = 'k',linewidth = .5, label = 'Original Trace')
         ax1.plot(df_orig['delta-t'][start_k:end_k],df_orig['led angle'][start_k:end_k],color = 'goldenrod', linewidth = 1, label = 'LED')
-
-
         # Revised Plot
         ax2.plot(df_revised['delta-t'][start_k:end_k],df_revised['Adjusted Angle'][start_k:end_k],color = 'k', linewidth = .8, label = 'Adjusted Heading')
         ax2.plot(df_revised['delta-t'][start_k:end_k],df_revised['led angle'][start_k:end_k],color = 'goldenrod', linewidth = 1, label = 'LED')
@@ -60,12 +63,13 @@ def wrapping_fix(df_orig,df_revised):
     ax1.set_xlabel("time")
     ax1.set_ylabel("Heading/LED Angle")
     ax1.set_yticks(np.arange(-180,181,90))
-    ax1.legend(loc = "lower right")
     ax2.set_title("Fly Trace Adjusted")
     ax2.set_xlabel("time")
     ax2.set_ylabel("Heading/LED Angle")
     ax2.set_yticks(np.arange(-180,181,90))
-    ax2.legend(loc = "lower right")
+    if k_sub ==  0:
+        ax1.legend(loc='lower right')
+        ax2.legend(loc = "lower right")
 
 def wrapping_fix_old(data,subgroups,plot=True):
     """
@@ -132,4 +136,6 @@ def wrapping_fix_old(data,subgroups,plot=True):
     ax1.tick_params(axis='both',which='major', labelsize = 15)
     ax1.spines['top'].set_visible(False)
     ax1.spines['right'].set_visible(False)
+    # if k_sub ==  0:
+    #     ax1.legend(loc='lower right')
     plt.savefig('figs/main_fig_with_subsplit.svg',facecolor = 'white')

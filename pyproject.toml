@@ -16,6 +16,8 @@ include = [
     "src/flyplot/data/raw_data/*.csv"
 ]
 
+[tool.poetry.scripts]
+proj-setup = "flyplot.project_setup:setup"
 
 [tool.poetry.dependencies]
 python = ">=3.9, <3.13"

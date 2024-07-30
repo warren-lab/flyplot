@@ -58,20 +58,26 @@ def flyplot_copy():
     path_dir = input("Target Directory: ") # "/media/loganrower/D5E2-7968/20240502125110_data"
     # Set Image Directory 
     print("\nEstablish Image Directory Path:")
-    imgs_dir = "'"+input("")+"'" # "'/home/flyranch/image_data/20240621/fly1/20240621102556'" 
-    date_exp = imgs_dir.strip("'").split('/')[-1]
+    imgs_dir = "'"+input("")+"/*.png"+"'" # "'/home/flyranch/image_data/20240621/fly1/20240621102556'" 
+    date_exp = imgs_dir.strip("'").split('/')[-2]
     print("Experiment Date: ",date_exp,"\n")
+
+    # Setup new folder in projet directory
+    ## folder will consist of the updated_txt data and a figure folder
+    ## if rerunning need to allow user to overwrite or new version for notebook, textfile, and figures...
+
+    
 
     # Set Text file
     print("Textfile Name:")
-    txtfile = "'"+path_dir+input("")+"'" # "'/media/loganrower/D5E2-7968/20240502125110_data/20240502125110.txt'" 
-    date_exp = imgs_dir.strip("'").split('/')[-1]
+    txtfile = "'"+path_dir+"/"+input("")+"'" # "'/media/loganrower/D5E2-7968/20240502125110_data/20240502125110.txt'" 
 
     print("EXP Date",date_exp)
     # Copy Notebook
     print("Copied Notebook Location")
     target_dir = os.path.join(path_dir,f'flyflip_{date_exp}.ipynb')
     print("Does notebook exists?",os.path.exists('flyflip.ipynb'))
+    print("Does image path exist?",os.path.exists(imgs_dir.strip("'").strip('/*.png')))
     print("Does target path exists?",os.path.exists(path_dir))
     with pkg_resources.open_binary('flyplot.fly_analysis', 'flyflip.ipynb') as nb_file:
         with open(target_dir,'wb') as target:
@@ -89,12 +95,15 @@ def flyplot_copy():
         img_source = fly_book_content['cells'][6]['source'][0].split("=")
         print(img_source)
         img_source_new = img_source[0] + " = " + str(imgs_dir) 
+        fly_book_content['cells'][6]['source'][0] = img_source_new # set new img source
+
+
         print('NEW IMAGE SOURCE->',img_source_new)
         txt_source = fly_book_content['cells'][7]['source'][0].split("=")
         print(txt_source)
         txt_source_new = txt_source[0] + " = " + str(txtfile) 
         print('NEW TXT SOURCE',txt_source_new)
-        fly_book_content['cells'][7]['source'][0] = txt_source_new
+        fly_book_content['cells'][7]['source'][0] = txt_source_new # set new txt source
 
     # Write paths
     with open(target_dir, 'w', encoding='utf-8') as fly_book:
