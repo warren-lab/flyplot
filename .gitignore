@@ -19,6 +19,3 @@ config.ini
 
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
-
-# Poetry
-.lock
