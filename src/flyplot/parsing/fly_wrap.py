@@ -13,7 +13,7 @@ def wrapping_fix_single(data):
             Corresponds to a dataframe containing heading related data
     NEED TO CHANGE Adjusted HEADING TO fly heading
     """
-def wrapping_fix(df_orig,df_revised):
+def wrapping_fix(exp_date, df_orig,df_revised):
     """
     Parameters:
         - df_orig:
@@ -70,6 +70,8 @@ def wrapping_fix(df_orig,df_revised):
     if k_sub ==  0:
         ax1.legend(loc='lower right')
         ax2.legend(loc = "lower right")
+    plt.savefig(f'{exp_date}_wrap_Orig_AdjHeading.png',facecolor = 'white')
+    plt.savefig(f'{exp_date}_wrap_Orig_AdjHeading.svg',facecolor = 'white')
 
 def wrapping_fix_old(data,subgroups,plot=True):
     """

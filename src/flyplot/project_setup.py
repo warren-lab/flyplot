@@ -49,6 +49,7 @@ def copy_nb(proj_dir,date_exp,imgs_dir,txtfile):
 
     img_source_new = ""
     txt_source_new =""
+    date_exp_new =""
     fly_book_content ={}
 
     # read data and add to dictionary
@@ -58,14 +59,23 @@ def copy_nb(proj_dir,date_exp,imgs_dir,txtfile):
         print(img_source)
         img_source_new = img_source[0] + " = " + str(imgs_dir) 
         fly_book_content['cells'][6]['source'][0] = img_source_new # set new img source
-
-
         print('NEW IMAGE SOURCE->',img_source_new)
+        
+        
         txt_source = fly_book_content['cells'][7]['source'][0].split("=")
         print(txt_source)
         txt_source_new = txt_source[0] + " = " + str(txtfile) 
         print('NEW TXT SOURCE',txt_source_new)
         fly_book_content['cells'][7]['source'][0] = txt_source_new # set new txt source
+
+        date_exp_source = fly_book_content['cells'][8]['source'][0].split("=")
+        print(date_exp_source)
+        date_exp_new = date_exp_source [0] + " = " + str("'"+str(date_exp)+"'") 
+        print('NEW date_exp SOURCE',date_exp_new)
+        fly_book_content['cells'][8]['source'][0] = date_exp_new # set new date exp source
+
+
+        # set the exp_date source
 
     # Write paths
     with open(target_dir, 'w', encoding='utf-8') as fly_book:
@@ -78,6 +88,8 @@ def copy_nb(proj_dir,date_exp,imgs_dir,txtfile):
         print(source_img)
         source_txt = fly_book_content['cells'][7]['source'][0].split("=")
         print(source_txt)
+        source_txt = fly_book_content['cells'][8]['source'][0].split("=")
+        print(source_txt)
 def setup():
     """
     Setup a new project --new
@@ -87,7 +99,7 @@ def setup():
                                      description="setup in project_setup results in the complete initialization of a new fly analysis project, or the ability to add to a previously made project.")
     parser.add_argument("--target",action='store_true',
                         help="If you are in target directory add this argument to provide the appropriate path to make the project")
-    parser.add_argument("--txt_path",action='store_true',help="To include path to text file")
+    parser.add_argument("--txt",action='store_true',help="To include path to text file")
     # parser.add_argument("--nb", action='store_true' ,
                         # help="Creates new notebook in project directory.")
     # determine what arguments were used 
@@ -108,30 +120,33 @@ def setup():
         # user defined path:
         # # same as textfile location
         path_dir = input("Target Directory: ") # Ex:"/media/username/D5E2-7968/20240502125110_data" 
-    directory = f'analysis_{proj_num}'
-    proj_path = os.path.join(path_dir,directory)
+
     # check to see if directory already exists
     check_dir_1 = [d for d in os.listdir(path_dir) if os.path.isdir(d)]
     print(check_dir_1)
-    check_dir_2 = [d for d in check_dir_1 if d[:8]==('analysis')]
-    print(check_dir_2)
-    print(len(check_dir_2))
-    print(check_dir_2.sort(reverse=True))
-    print(check_dir_2[0])
-    if len(check_dir_2)>0:
-        if len(check_dir_2) ==1:
-            proj_num+=int(check_dir_2[0][-1])
-        else:
-            print(check_dir_2.sort(reverse=True))
-            print(check_dir_2.sort(reverse=True)[0])
-            proj_num+=int(check_dir_2.sort(reverse=True)[0][-1])
+    if check_dir_1 == None:
+        directory = f'analysis_{proj_num}'
+        proj_path = os.path.join(path_dir,directory)
+    else:
+        check_dir_2 = [d for d in check_dir_1 if d[:8]==('analysis')]
+        print(check_dir_2)
+        check_dir_2.sort(reverse=True)
+        print(check_dir_2)
+        if len(check_dir_2)>0:
+            if len(check_dir_2) ==1:
+                proj_num+=int(check_dir_2[0][-1])
+            else:
+                print(check_dir_2[0][-1])
+                proj_num+=int(check_dir_2[0][-1])
     directory = f'analysis_{proj_num}'
     proj_path = os.path.join(path_dir,directory)
     os.mkdir(proj_path) # make the project directory
     print(os.path.exists(proj_path))
+    # create figures sub directory in project directory
+    fig_path = os.path.join(proj_path,'figs')
+    os.mkdir(fig_path)
     # Check 2: Set Path for text file:
-    
-    if args.txt_path:
+    if args.txt:
         print("Set Location for textfile") 
         txtfile = "'"+input("")+"'" # location of textfile 
     else:
