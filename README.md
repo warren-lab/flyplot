@@ -16,7 +16,7 @@ pip install poetry
 ```
 - Run the using the following command [installation script](tools/install.sh)
 ```
-install-run
+poetry run install-run
 ```
 - See more at [Install Guide](doc/INSTALL.md)
 

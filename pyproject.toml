@@ -18,7 +18,7 @@ include = [
 ]
 
 [tool.poetry.scripts]
-install-run = "flyplot.install:run"
+install-run = "tools.install:run"
 proj-setup = "flyplot.project_setup:setup"
 
 [tool.poetry.dependencies]
