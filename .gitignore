@@ -21,4 +21,4 @@ config.ini
 .ipynb_checkpoints/
 
 # Poetry
-.lock
+poetry.lock
