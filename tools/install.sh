@@ -1,6 +1,4 @@
 #!/bin/bash
-# Install Poetry
-pip install poetry
 # Install library dependencies with Poetry
 poetry install
 # Build the library

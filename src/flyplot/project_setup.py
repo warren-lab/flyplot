@@ -177,6 +177,3 @@ def setup():
     config_path = os.path.join(proj_path,'config.ini')
     with open(config_path, 'w') as configfile:
 	    config.write(configfile)
-
-if __name__ == "__main__":
-    setup()

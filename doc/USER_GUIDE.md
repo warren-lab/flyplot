@@ -78,3 +78,19 @@ ipython kernel install --user --name=flyplot_venv
 ```
 jupyter-kernelspec uninstall venv
 ```
+
+## Process to make changes to Library:
+
+If changes are made to this repository the following process must be performed to ensure that dependencies are still working and for updating the toml and lock files 
+that will be used to build the package
+
+
+- First, update the lock file
+```
+poetry lock
+```
+- After updating the lock install the dependencies and build the package using the [install script](/tools/install.sh)
+```
+./tools/install.sh
+```
+

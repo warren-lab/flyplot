@@ -10,9 +10,13 @@ git clone https://github.com/warren-lab/flyplot.git
 ```
 cd flyplot
 ```
-- Run the [installation script](tools/install.sh)
+- Install poetry
 ```
-./tools/install.sh
+pip install poetry
+```
+- Run the using the following command [installation script](tools/install.sh)
+```
+install-run
 ```
 - See more at [Install Guide](doc/INSTALL.md)
 
