@@ -29,11 +29,7 @@ cd flyplot
 ```
 pip install poetry
 ```
-- Run the [installation script](tools/install.sh) using one of the following methods
-```
-install-run 
-```
-OR
+- Run the [installation script](tools/install.sh) using the following methods
 ```
 ./tools/install.sh
 ```

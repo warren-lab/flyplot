@@ -14,9 +14,10 @@ cd flyplot
 ```
 pip install poetry
 ```
+- Install poetry
 - Run the using the following command [installation script](tools/install.sh)
 ```
-poetry run install-run
+./tools/install.sh
 ```
 - See more at [Install Guide](doc/INSTALL.md)
 

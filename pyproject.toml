@@ -6,8 +6,7 @@ authors = ["Logan Rower <lkrower2000@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 packages = [
-    { include = "flyplot", from = "src" },
-    {include = "tools"}
+    { include = "flyplot", from = "src" }
 ]
 include = [
     "src/flyplot/fly_analysis/flyflip.ipynb",
@@ -18,7 +17,6 @@ include = [
 ]
 
 [tool.poetry.scripts]
-install-run = "tools.install:run"
 proj-setup = "flyplot.project_setup:setup"
 
 [tool.poetry.dependencies]
