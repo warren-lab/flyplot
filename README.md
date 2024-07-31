@@ -19,14 +19,14 @@ cd flyplot
 ```
 ./tools/install.sh
 ```
-- See more at [Install Guide](doc/INSTALL.md)
+- See more in the `Installation` section of [User Guide](doc/USER_GUIDE.md)
 
 ## Setting Up New Project:
 The primary use case of this library is to aid the user in their management of analysis files. This project comes with a pre-made template notebook for an analysis workflow which is copied into a pre-defined directory by the user. The project directory allows for separation between different analyses and datasets.
 
 A copy of the notebook can be editted by the user for their own purposed. The example notebooks can be examined to see the various different methods that can be used in examining Drosophila orientation.
 
-- Creating project directory in current directory and requires full paths for the text file and image directory
+- Creating project directory in current directory and requires full paths for the text file and image directory (`recommmended approach`)
 ```
 proj-setup --target --txt
 ```
