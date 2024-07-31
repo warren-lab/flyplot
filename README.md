@@ -2,20 +2,20 @@
 Flyplot is a Python library that can be used to streamline the analysis pipeline for Drosophila-based experiments. This library contains modules for analyzing drosophila-related experiments, by developing informative plots and statistics.
 
 ## Quick Installation Guide:
-- Clone the repository:
-```
-git clone https://github.com/warren-lab/flyplot.git
-```
-- Navigate to the root of the repository, and ensure that proper virtual environment is active:
-```
-cd flyplot
-```
+- Activate Python virtual environment > 3.9
 - Install poetry
 ```
 pip install poetry
 ```
-- Install poetry
-- Run the using the following command [installation script](tools/install.sh)
+- Clone the repository:
+```
+git clone https://github.com/warren-lab/flyplot.git
+```
+- Navigate to the root of the repository
+```
+cd flyplot
+```
+- Install the library using the following command [installation script](tools/install.sh)
 ```
 ./tools/install.sh
 ```
