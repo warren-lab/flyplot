@@ -1,77 +1,38 @@
 # flyplot
-This repository contains the methods for conducting the necessary analysis for drosophila-related experiments, by developing informative plots and statistics.
+Flyplot is a Python library that can be used to streamline the analysis pipeline for Drosophila-based experiments. This library contains modules for analyzing drosophila-related experiments, by developing informative plots and statistics.
 
-The possible goal of this repository being developed is as a full-fledged library for internal or external usage for drosophila-related analyses.
-
-
-# Directions for Install:
-- install python 3.9
-
-- install venv
-
-- create virtual environment
-
-- install poetry
-
-- build and then install wheel
+## Quick Installation Guide:
+- Clone the repository:
 ```
-poetry build
+git clone https://github.com/warren-lab/flyplot.git
 ```
+- Navigate to the root of the repository, and ensure that proper virtual environment is active:
 ```
-cd dist
-pip install flyplot-0.1.0-py3-none-any.whl
+cd flyplot
 ```
-
-# Using this package:
-- ability to import various modules for fly analys that utilize custome modules and some that are inspired by the find_fly_angle module (will link those in future)
-- run the module fly_analysis.py to create copy of flyflip.ipynb where your data lies for specific experiment
-
-## Using Poetry:
-
-- install python 3.9
-
-- install venv
-
-- create virtual environment
-
-- install poetry
-
-- If repo already exists execute the following and follow the steps within the repo:
+- Run the [installation script](tools/install.sh)
 ```
-poetry init
+./tools/install.sh
 ```
+- See more at [Install Guide](doc/INSTALL.md)
 
-- After this point use the following steps
-    1. (Optional) If have made changes since last update to the package then run following:
-    ```
-    poetry lock
-    ```
-    2. execute installation of dependencies
-    ```
-    poetry install
-    ```
-    3. Build the dist directory which will contain the wheel file that is used for installation of the package
-    ```
-    poetry build
-    ```
+## Setting Up New Project:
+The primary use case of this library is to aid the user in their management of analysis files. This project comes with a pre-made template notebook for an analysis workflow which is copied into a pre-defined directory by the user. The project directory allows for separation between different analyses and datasets.
 
-    4. Go to dist directory and install package locally
-    ```
-    cd dist
-    pip install flyplot-0.1.0-py3-none-any.whl
-    ```
+A copy of the notebook can be editted by the user for their own purposed. The example notebooks can be examined to see the various different methods that can be used in examining Drosophila orientation.
 
-- Publishing -> TBD
-
-
-## Running:
-
-- Creating project directory in current directory and requires custom textfile and image full paths
+- Creating project directory in current directory and requires full paths for the text file and image directory
 ```
 proj-setup --target --txt
 ```
 
-- Creating project directory in current directory and requires textfile name in current directory with custom image paths 
+- Creating project directory in current directory and requires the full path for the image directory. However, only the filename of the text file is required, as it is assumed that it is located in the same location as the project directory.
 ```
 proj-setup --target 
 ```
+
+## Library Utility:
+- Automates file access and management
+- Ensures that all analyses are maintained to the same standard by starting with a template notebook.
+- Ability to utilize various modules that allow for a greater accuracy in correcting the computed fly orientation. 
+- Incorporates aspects of the [find_fly_angle](ACKNOWLEDGEMENTS.md) module.

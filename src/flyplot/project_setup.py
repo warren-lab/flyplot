@@ -100,8 +100,7 @@ def setup():
     parser.add_argument("--target",action='store_true',
                         help="If you are in target directory add this argument to provide the appropriate path to make the project")
     parser.add_argument("--txt",action='store_true',help="To include path to text file")
-    # parser.add_argument("--nb", action='store_true' ,
-                        # help="Creates new notebook in project directory.")
+
     # determine what arguments were used 
     args = parser.parse_args()
 

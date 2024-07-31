@@ -25,6 +25,7 @@ numpy = "1.26.0"
 matplotlib = "3.7.5"
 opencv-python = "4.9.0.80"
 pandas = "2.0.3"
+jupyter="1.0.0"
 find_fly_angle={git = "https://github.com/warren-lab/find_fly_angle.git",branch="main"}
 
 [build-system]
