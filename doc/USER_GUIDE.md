@@ -83,6 +83,10 @@ Run the Update.sh script
 ```
 This will require that the user provide some user inputs, but will essentially perform Method 2, but in a more automated manner for updating the entire library.
 
+First input will be whether you input a `y` or `n` character to indicate if you want to delete the `dist` directory. The input should be `y` unless you want to exit the update process.
+
+Second input is the commit message as this method is also doing the add, commit, pull and push actions an appropriate message will be required. 
+
 ### Method 2: 
 1. Update the .lock file   
     ```

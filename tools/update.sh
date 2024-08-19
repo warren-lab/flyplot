@@ -19,6 +19,7 @@ if [ -d "$dir_remove" ]; then
         echo "dist directory has been removed"
     else
         echo "'$dir_remove' deletion cancelled"
+        exit 1
     fi
 else
     echo "No '$dir_remove' directory exists"
