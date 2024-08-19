@@ -72,13 +72,42 @@ These are example notebooks of how to use some of the various modules included w
     ```
     poetry init
     ```
-#### Process to make changes to Library: 
+## Making changes to Library: 
 If changes are made to this repository the following process must be performed:
 
+
+### Method 1:
+
+### Method 2: 
 1. Update the .lock file   
     ```
     poetry lock
     ```
+2. Install any new dependencies:
+    ```
+    poetry install
+    ```
+3. Build the package/library
+    ```
+    poetry build
+    ```
+4. Install the package again
+    Ensure that python environment is activated. Then install the library via the
+    .whl and then proceed to delete the dist directory.
+    ```
+    cd dist 
+    pip install dist/*whl
+    rm -rf dist
+    ```
+
+5. Push the updated changes and lock file to GitHub
+    ```
+    git add .
+    git commit -m "[Custom Message]"
+    git pull origin
+    git push orign
+    ```
+
 
 2. Follow the steps in **Install Library** to build the package 
 
@@ -87,6 +116,7 @@ If changes are made to this repository the following process must be performed:
     ```
     ./tools/install.sh
     ```
+
 
 ## Using Jupyter Notebook Local Host...
 - Activate your virtual environment
