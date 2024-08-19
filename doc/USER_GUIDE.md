@@ -77,6 +77,11 @@ If changes are made to this repository the following process must be performed:
 
 
 ### Method 1:
+Run the Update.sh script
+```
+./tools/update.sh
+```
+This will require that the user provide some user inputs, but will essentially perform Method 2, but in a more automated manner for updating the entire library.
 
 ### Method 2: 
 1. Update the .lock file   
