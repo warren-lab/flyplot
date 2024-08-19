@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "flyplot"
-version = "0.1.0"
+version = "0.1.1"
 description = "Python package that aids in the generation of informative plots and informatics regarding drosophila based experiments."
 authors = ["Logan Rower <lkrower2000@gmail.com>"]
 license = "MIT"
